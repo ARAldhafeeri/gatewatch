@@ -1,0 +1,8 @@
+
+
+
+class AccessControl {
+    constructor(policy){
+
+    }
+}

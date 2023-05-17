@@ -1,0 +1,22 @@
+{
+  "name": "rbac",
+  "version": "1.0.0",
+  "description": "Verbose, readable JSON policy based Role based access control for JavaScript based applications.",
+  "main": "AccessControlError.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ARAldhafeeri/rbac.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ARAldhafeeri/rbac/issues"
+  },
+  "homepage": "https://github.com/ARAldhafeeri/rbac#readme"
+}
