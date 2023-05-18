@@ -7,7 +7,7 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test":  "jest --forceExit"
   },
   "repository": {
     "type": "git",
@@ -18,5 +18,8 @@
   "bugs": {
     "url": "https://github.com/ARAldhafeeri/rbac/issues"
   },
-  "homepage": "https://github.com/ARAldhafeeri/rbac#readme"
+  "homepage": "https://github.com/ARAldhafeeri/rbac#readme",
+  "dependencies": {
+    "jest": "^29.5.0"
+  }
 }
