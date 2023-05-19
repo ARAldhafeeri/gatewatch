@@ -45,6 +45,20 @@ describe('AccessControlUtils: test entire queries ', () => {
        
     })
 
+    // bug must fix , race condition maybe can be fixed using map
+
+    test('truthy and falsy build before grants at the same time ', async () => {
+
+        const truthy = ac.role("user").can(["create", "update"]).on(["post"])
+        console.log(ac.query)
+        const falsy = ac.role("user").can(["create", "update"]).on(["wrong"])
+        console.log(ac.query)
+        expect(truthy.grant()).toBeTruthy()
+        expect(falsy.grant()).toBeFalsy()
+       
+    })
+
+
 
     test('AccessControl.role("user").grant() return false since it is risky ', async () => {
 
