@@ -74,39 +74,56 @@ We can check the permissions
 - check if user can perform delete on post
 ```JavaScript
 const ac = new AccessControl(policy);
-ac.role("user").can("delete").on("post").grant(); // returns true
+
+const enforcedPolicy = ac.enforce();
+
+new GrantQuery(enforcedPolicy).role("user").can("delete").on("post").grant(); // returns true
 ```
 - check if user can perform multiple operations on a resource:
 
 ```JavaScript
 const ac = new AccessControl(policy)
-ac.role("user").can(["delete", "create", "update"]).on("post").grant(); // returns true
+
+const enforcedPolicy = ac.enforce();
+
+new GrantQuery(enforcedPolicy).role("user").can(["delete", "create", "update"]).on("post").grant(); // returns true
 ```
 
 - example of exit  false grant given operation do not exists in the policy:
 ```JavaScript
+
 const ac = new AccessControl(policy)
-ac.role("user").can(["delete", "create", "random"]).on("post").grant(); // returns false
+
+const enforcedPolicy = ac.enforce();
+
+new GrantQuery(enforcedPolicy).role("user").can(["delete", "create", "random"]).on("post").grant(); // returns false
 ```
 
 - example of checking onwership of a resource and using it to authorize 
 ```JavaScript
 const ac = new AccessControl(policy);
+
+const enforcedPolicy = ac.enforce();
+
+
 // mongodb service
 const user = await userService.find("_id_": req.session.userID );
 const post = await postService.find("_id": req.params.postID );
-ac.role(user.role).can(["delete", "create", "random"]).on("post").if(user._id).is(post.creator._id).grant(); // returns true if user._id === post.creator._id in the database.
+new GrantQuery(enforcedPolicy).role(user.role).can(["delete", "create", "random"]).on("post").if(user._id).is(post.creator._id).grant(); // returns true if user._id === post.creator._id in the database.
 ```
 
 
 - modifiying previous example with grantAutoIf
 ```JavaScript
 const ac = new AccessControl(policy);
+
+const enforcedPolicy = ac.enforce();
+
 // mongodb service
 const user = await userService.find("_id_": req.session.userID );
 const post = await postService.find("_id": req.params.postID );
 const isSUperAdmin = user.role === "super-admin";
-ac.role(user.role).can(["delete", "create", "random"]).on("post").if(user._id).is(post.creator._id).grantAutoIf(isSuperAdmin); 
+new GrantQuery(enforcedPolicy).role(user.role).can(["delete", "create", "random"]).on("post").if(user._id).is(post.creator._id).grantAutoIf(isSuperAdmin); 
 ```
 
 In previous example the behavior is as follow:
