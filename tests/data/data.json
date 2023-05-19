@@ -1,0 +1,26 @@
+{
+    "resources": ["post","profile", "comment"],
+    "actions": ["delete", "create", "update", "read"],
+    "roles": ["user", "admin", "super-admin"],
+    "policies": [
+        {
+            "role": "user",
+            "can": ["delete", "create", "update", "read"],
+            "on": ["post", "profile","comment"]
+        },
+
+            {
+            "role": "admin",
+            "can": ["*"], 
+            "on": ["post", "profile","comment"]
+        },
+
+        {
+            "role": "super-admin",
+            "can": ["*"], 
+            "on": ["*"]
+        }
+        
+    ]
+
+}
