@@ -42,7 +42,6 @@ class AccessControl {
     */  
     constructor(policy){
         this.policy = policy;
-        this.query = {name: "", can: [], on: []};
     }
 
     /**
@@ -56,71 +55,86 @@ class AccessControl {
         return this.policy;
     }
 
+}
 
+class GrantQuery{
     /**
+     * 
+     * @param {*} policy 
+     * @description perform query on a policy
+     */
+    constructor(policy){
+     this.policy = policy
+     this.query = {name: "", can: [], on: []};
+    }
+
+        /**
      * 
      * @description     pass role name to query
      * if .grant() called after role() return this.granted
      * @param {String}  roleName    - role name
      */
-    role(roleName){
+        role(roleName){
 
-        this.query.role = roleName;
-
-        return this;
-    }
-
-    /**
-     * 
-     * @description     pass action names to query
-     * @param {Array}  actionsNames    - array of actions 
-     * @example actionNames = ['read','update']
-     */
-    can(actionsNames){
-
-        this.query.can = actionsNames;
-        
-        return this;
-    }
-
-    /**
-     * 
-     * @description     pass resources names to query
-     * @param {Array}  resourcesNames    - array of actions 
-     * @example resourcesNames = ['post','comment']
-     */
-    on(resourcesNames){
-        this.query.on = resourcesNames;
-        return this;
-    }
-
-
-    if() {
-
-        return this;
-    }
-
-    is(){
-
-        return this;
-    }
-
-    grant(){
-
-        const grant = acUtils.search(this.query, this.policy.policies);
-
-        this.query = {name: "", can: [], on: []};
-        
-        return grant;    
-    }
-
-    grantAutoIf(){
-
-        return this;
-
-    }
+            this.query.role = roleName;
+    
+            return this;
+        }
+    
+        /**
+         * 
+         * @description     pass action names to query
+         * @param {Array}  actionsNames    - array of actions 
+         * @example actionNames = ['read','update']
+         */
+        can(actionsNames){
+    
+            this.query.can = actionsNames;
+            
+            return this;
+        }
+    
+        /**
+         * 
+         * @description     pass resources names to query
+         * @param {Array}  resourcesNames    - array of actions 
+         * @example resourcesNames = ['post','comment']
+         */
+        on(resourcesNames){
+            this.query.on = resourcesNames;
+            return this;
+        }
+    
+    
+        if() {
+    
+            return this;
+        }
+    
+        is(){
+    
+            return this;
+        }
+    
+        grant(){
+    
+            const grant = acUtils.search(this.query, this.policy.policies);
+    
+            this.query = {name: "", can: [], on: []};
+            
+            return grant;    
+        }
+    
+        grantAutoIf(){
+    
+            return this;
+    
+        }
 
 }
 
 
-module.exports = AccessControl
+module.exports = {
+    AccessControl, 
+    GrantQuery
+}

@@ -85,6 +85,8 @@ class AccessControlUtils {
 
             ].every(this.allGrantsTrue);
 
+        console.log("allTruthy", allTruthy, query)
+
         if(!allTruthy){
             return false;
         }
@@ -94,6 +96,7 @@ class AccessControlUtils {
         // get policy for the given role
         const [queryRole] = policies.filter(policy => query.role === policy.role);
 
+        console.log("found queryRole", queryRole)
         // no role found return false
         if(!queryRole) return false;
 
@@ -111,10 +114,13 @@ class AccessControlUtils {
 
         );
         
+        console.log("grant after resources search", grant)
 
         if(query.can.includes("*")){
 
             grant.push(queryRole.can.includes("*"))
+
+            console.log("grant after action search with *", grant)
 
         } else {
             query.can.forEach(operation => 
@@ -123,6 +129,7 @@ class AccessControlUtils {
 
             );
 
+            console.log("grant after action search without *", grant)
         }
         
 
