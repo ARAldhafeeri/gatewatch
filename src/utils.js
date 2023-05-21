@@ -96,7 +96,6 @@ class AccessControlUtils {
         // get policy for the given role
         const [queryRole] = policies.filter(policy => query.role === policy.role);
 
-        console.log("found queryRole", queryRole)
         // no role found return false
         if(!queryRole) return false;
 
@@ -108,19 +107,25 @@ class AccessControlUtils {
          * 2. has all the query resources in the policy resources
          */
 
-        query.on.forEach(resource => 
+        if(query.on.includes("*")){
 
-            grant.push(queryRole.on.includes(resource))
+            grant.push(queryRole.on.includes("*"))
 
-        );
-        
-        console.log("grant after resources search", grant)
+        } else {
+
+            query.on.forEach(resource => 
+
+                grant.push(queryRole.on.includes(resource))
+    
+            );
+
+            
+        }
 
         if(query.can.includes("*")){
 
             grant.push(queryRole.can.includes("*"))
 
-            console.log("grant after action search with *", grant)
 
         } else {
             query.can.forEach(operation => 
@@ -129,12 +134,11 @@ class AccessControlUtils {
 
             );
 
-            console.log("grant after action search without *", grant)
         }
         
 
         return grant.every(this.allGrantsTrue)
-        }
+    }
    /**
      * @description used in arr.every
      * @param {Object} grant  - check every resources, every operation on given role
