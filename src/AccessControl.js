@@ -65,7 +65,7 @@ class GrantQuery{
      */
     constructor(policy){
      this.policy = policy
-     this.query = {name: "", can: [], on: []};
+     this.query = {};
     }
 
         /**
@@ -105,28 +105,15 @@ class GrantQuery{
             return this;
         }
     
-    
-        if() {
-    
-            return this;
-        }
-    
-        is(){
-    
-            return this;
-        }
-    
         grant(){
     
             const grant = acUtils.search(this.query, this.policy.policies);
-    
-            this.query = {name: "", can: [], on: []};
             
             return grant;    
         }
     
-        grantAutoIf(){
-    
+        grantAutoIf(grantAutoIf){
+            this.query.grantAutoIf = grantAutoIf
             return this;
     
         }

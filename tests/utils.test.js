@@ -76,6 +76,29 @@ describe('test positive AccessControlUtils methods', () => {
        
     })
 
+    test('AccessControlUtils.search returns true because grantAutoIf is true', async () => {
+
+       
+        const obj = acUtils.search(
+            {role: "user", can: ["*"], on:[], grantAutoIf: true},
+            policyData.policies)
+
+        expect(obj).toBeTruthy()
+       
+    })
+
+
+    test('AccessControlUtils.search returns true because grantAutoIf is false but the grant is based on the query', async () => {
+
+       
+        const obj = acUtils.search(
+            {role: "super-admin", can: ["*"], on:["*"], grantAutoIf: false},
+            policyData.policies)
+
+        expect(obj).toBeTruthy()
+       
+    })
+
 })
 
 describe('test negitive scenarios AccessControlUtils methods', () => {

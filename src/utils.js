@@ -5,7 +5,7 @@ const {
     RESOURCES_MUST_BE_DEFINED,
     ACTIONS_MUST_BE_A_LIST,
     POLICIES_MUST_BE_A_LIST,
-    ROLES_MUST_BE_A_LIST
+    ROLES_MUST_BE_A_LIST,
 } = require("./core/erros");
 
 /**
@@ -74,6 +74,14 @@ class AccessControlUtils {
      * @returns {Boolean}   - returns true or false based on policies and query
      */
     search(query, policies){
+        // handle privilaged users with grantAutoIf
+        // if the the condition checks as user is privilage, disregard the query and return true grant
+        if('grantAutoIf' in query){
+            if(query.grantAutoIf){
+                return true
+            }
+        }
+
         // incorrect query : role, can, on must be defined
         const allTruthy = [
 
@@ -85,11 +93,11 @@ class AccessControlUtils {
 
             ].every(this.allGrantsTrue);
 
-        console.log("allTruthy", allTruthy, query)
-
         if(!allTruthy){
             return false;
         }
+            
+
         
         let grant= [];
         
@@ -154,7 +162,7 @@ class AccessControlUtils {
      * @returns {Boolean}   - returns true if role name is not empty string and instance of string
     */
     validateRole(roleName){
-        return ( (roleName !== "") && (typeof roleName === "string"))
+        return ( (roleName !== "") && (typeof roleName === "string"));
     }
 
     /**
@@ -163,7 +171,7 @@ class AccessControlUtils {
      * @returns {Boolean}   - returns true if resources is array and length of the resources is greater than 0
     */
     validateResources(resources){
-        return ( (resources?.length > 0) && (resources instanceof Array))
+        return ( (resources?.length > 0) && (resources instanceof Array));
     }
 
 
@@ -173,7 +181,11 @@ class AccessControlUtils {
      * @returns {Boolean}   - returns true if operations is array and length of the operations is greater than 0
     */
     validateOperations(operations){
-        return ( (operations?.length > 0) && (operations instanceof Array))
+        return ( (operations?.length > 0) && (operations instanceof Array));
+    }
+
+    validateGrantAuto(grantAutoIf){
+        return typeof grantAutoIf === 'boolean';
     }
     
 

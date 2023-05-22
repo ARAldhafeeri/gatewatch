@@ -72,4 +72,32 @@ describe('AccessControlUtils: test entire queries ', () => {
     })
 
 
+    test('returns true since the condition based to grantAutoIf is true ', async () => {
+
+        const roleExists = new GrantQuery(enforcedPolicy).role("user").can(["create", "update", 'badAction']).on(["post"]).grantAutoIf(true).grant()
+
+        expect(roleExists).toBeTruthy()
+       
+    })
+
+
+    
+    test('returns true since the condition based to grantAutoIf is false but query is granted ', async () => {
+
+        const roleExists = new GrantQuery(enforcedPolicy).role("user").can(["create", "update"]).on(["post"]).grantAutoIf(false).grant()
+
+        expect(roleExists).toBeTruthy()
+       
+    })
+
+
+    test('returns true since  admin role and resources has "*"  ', async () => {
+
+        const roleExists = new GrantQuery(enforcedPolicy).role("admin").can(["create", "update"]).on(["post"]).grantAutoIf(false).grant()
+
+        expect(roleExists).toBeTruthy()
+       
+    })
+
+
 })
