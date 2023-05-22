@@ -11,10 +11,10 @@ Current libraries that do the same thing are great, however, the motivation behi
 To create a complete role:
  A ROLE can perform OPERATIONs on Resources IF something IS something
 
-IF "something1" IS "Something believed to be something1 "
+onlyIf "something1" IS "Something believed to be something1 "
 will return something1 === "Something believed to be something1 "
 
-an extention that allows to perform attribuation and check the ownership of a resources.
+an extention that allows flexibilty to check of other things e.g. onwership of resources, attribation and so on. 
 
 ### least-privilge and zero trust:
 
@@ -34,7 +34,9 @@ we can manage privileged users in application as well using grantAutoIf(conditio
     + on()
 note: if the three mentioned above not chained within the query or badly formated, the grant will return false:
 
-- If there is a use-case where a privilaged user such superadmin, use grantAutoIf(condition) at your own risk.
+- If there is a use-case where a privilaged user such superadmin, use grantAutoIf(condition) at your own risk; grantAutoIf will authorize the grant if the condition passed to it is true.
+
+- if you need to link the grant to a specific condition and return true or false based on that use onlyIfgit s
 
 
 ## Usage
@@ -99,7 +101,7 @@ const enforcedPolicy = ac.enforce();
 new GrantQuery(enforcedPolicy).role("user").can(["delete", "create", "random"]).on("post").grant(); // returns false
 ```
 
-- example of checking onwership of a resource and using it to authorize 
+- example of checking onwership of a resource and using it to authorize with onlyIf
 ```JavaScript
 const ac = new AccessControl(policy);
 
@@ -109,11 +111,11 @@ const enforcedPolicy = ac.enforce();
 // mongodb service
 const user = await userService.find("_id_": req.session.userID );
 const post = await postService.find("_id": req.params.postID );
-new GrantQuery(enforcedPolicy).role(user.role).can(["delete", "create", "random"]).on("post").if(user._id).is(post.creator._id).grant(); // returns true if user._id === post.creator._id in the database.
+new GrantQuery(enforcedPolicy).role(user.role).can(["delete", "create", "random"]).on("post").onlyIf(user._id === post.creator._id).grant(); // returns true if user._id === post.creator._id in the database.
 ```
 
 
-- modifiying previous example with grantAutoIf
+- grant auto example
 ```JavaScript
 const ac = new AccessControl(policy);
 
@@ -121,9 +123,9 @@ const enforcedPolicy = ac.enforce();
 
 // mongodb service
 const user = await userService.find("_id_": req.session.userID );
-const post = await postService.find("_id": req.params.postID );
+
 const isSUperAdmin = user.role === "super-admin";
-new GrantQuery(enforcedPolicy).role(user.role).can(["delete", "create", "random"]).on("post").if(user._id).is(post.creator._id).grantAutoIf(isSuperAdmin); 
+new GrantQuery(enforcedPolicy).role(user.role).can(["delete", "create", "random"]).on("post").grantAutoIf(isSuperAdmin); 
 ```
 
 In previous example the behavior is as follow:

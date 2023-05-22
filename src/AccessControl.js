@@ -118,6 +118,11 @@ class GrantQuery{
     
         }
 
+        onlyIf(onlyIf){
+            this.query.grantAutoIf = grantAutoIf
+            return this;
+        }
+
 }
 
 
