@@ -107,9 +107,9 @@ class AccessControlUtils {
          * 2. has all the query resources in the policy resources
          */
 
-        if(query.on.includes("*")){
-
-            grant.push(queryRole.on.includes("*"))
+        if(queryRole.on.includes("*")){
+            // auto grant all resources since user have "*" which means all resources
+            grant.push(true)
 
         } else {
 
@@ -122,9 +122,9 @@ class AccessControlUtils {
             
         }
 
-        if(query.can.includes("*")){
+        if(queryRole.can.includes("*")){
 
-            grant.push(queryRole.can.includes("*"))
+            grant.push(true)
 
 
         } else {
