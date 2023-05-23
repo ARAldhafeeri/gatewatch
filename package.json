@@ -1,8 +1,8 @@
 {
-  "name": "AuthorizationSystem",
-  "version": "1.0.0",
+  "name": "gatewatch",
+  "version": "1.1.0",
   "description": "Verbose, readable JSON policy based Role based access control for JavaScript based applications.",
-  "main": "AccessControlError.js",
+  "main": "AccessControl.js",
   "directories": {
     "test": "tests"
   },
@@ -12,14 +12,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ARAldhafeeri/rbac.git"
+    "url": "git+https://github.com/ARAldhafeeri/gatewatch.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/ARAldhafeeri/rbac/issues"
+    "url": "https://github.com/ARAldhafeeri/gatewatch/issues"
   },
-  "homepage": "https://github.com/ARAldhafeeri/rbac#readme",
+  "homepage": "https://github.com/ARAldhafeeri/gatewatch#readme",
   "dependencies": {
     "jest": "^29.5.0"
   }
