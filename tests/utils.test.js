@@ -99,6 +99,32 @@ describe('test positive AccessControlUtils methods', () => {
        
     })
 
+
+    test('AccessControlUtils.search returns true because can, on, resource, and are true', async () => {
+
+       
+        const obj = acUtils.search(
+            {role: "super-admin", can: ["*"], on:["*"], and: true},
+            policyData.policies)
+
+        expect(obj).toBeTruthy()
+
+    })
+
+
+    test('AccessControlUtils.search returns true because can, on, resource, and are true, or is true', async () => {
+
+       
+        const obj = acUtils.search(
+            {role: "super-admin", can: ["*"], on:["*"], and: true, or: true},
+            policyData.policies)
+
+        expect(obj).toBeTruthy()
+
+    })
+
+          
+
 })
 
 describe('test negitive scenarios AccessControlUtils methods', () => {
@@ -329,8 +355,112 @@ describe('test negitive scenarios AccessControlUtils methods', () => {
        
     })
 
+    test('AccessControlUtils.search returns false invalid type or ', async () => {
+
+        const obj = acUtils.search(
+            { role:"user", can: ['read'], on: [''], or: ''},
+            policyData.policies)
+
+        expect(obj).toBeFalsy()
 
 
 
-});
+    });
+
+
+    test('AccessControlUtils.search returns false invalid type or ', async () => {
+
+        const obj = acUtils.search(
+            { role:"user", can: ['read'], on: [''], or: []},
+            policyData.policies)
+
+        expect(obj).toBeFalsy()
+
+
+
+    });
+
+
+    // and , or, query combination
+    test('test and -> false , or -> false, query -> false', async () => {
+
+        const obj = acUtils.search(
+            { role:"user", can: ['read'], on: [''], or: false, and: false},
+            policyData.policies)
+
+        expect(obj).toBeFalsy()
+
+    });
+
+
+    test('test and -> false , or -> false, query -> true', async () => {
+
+        const obj = acUtils.search(
+            { role:"user", can: ['read'], on: ['post'], or: false, and: false},
+            policyData.policies)
+
+        expect(obj).toBeFalsy()
+
+    });
+
+    test('test and -> true , or -> true, query -> true', async () => {
+
+        const obj = acUtils.search(
+            { role:"user", can: ['read'], on: ['post'], or: true, and: true},
+            policyData.policies)
+
+        expect(obj).toBeTruthy()
+
+    });
+
+
+    test('test and -> true , or -> false, query -> false', async () => {
+
+        const obj = acUtils.search(
+            { role:"user", can: ['read'], on: [], or: false, and: true},
+            policyData.policies)
+
+        expect(obj).toBeFalsy()
+
+    });
+
+    test('test and -> true , or -> false, query -> true', async () => {
+
+        const obj = acUtils.search(
+            { role:"user", can: ['read'], on: ['post'], or: true, and: true},
+            policyData.policies)
+
+        expect(obj).toBeTruthy()
+
+    });
+
+
+    test('test and -> true , or -> true, query -> false', async () => {
+
+        const obj = acUtils.search(
+            { role:"user", can: [], on: [], or: true, and: true},
+            policyData.policies)
+
+        expect(obj).toBeTruthy()
+
+    });
+
+
+    test('test and -> true , or -> true, query -> true', async () => {
+
+        const obj = acUtils.search(
+            { role:"user", can: ['read'], on: ['post'], or: true, and: true},
+            policyData.policies)
+
+        expect(obj).toBeTruthy()
+
+    });
+
+
+
+
+
+
+
+})
 

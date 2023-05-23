@@ -81,9 +81,7 @@ class AccessControlUtils {
 
         if('or' in query){
             if(!this.validateBoolean(query.or)) return false;
-            if(query.or){
-                return true
-            }
+            if(query.or) return true;
         }
 
         // incorrect query : role, can, on must be defined
@@ -150,10 +148,8 @@ class AccessControlUtils {
 
         if('and' in query){
             if(!this.validateBoolean(query.and)) return false;
-                if(query.and){
-                    grant.push(query.and)
-                }
-            }
+               grant.push(query.and)
+        }
         
 
         return grant.every(this.allGrantsTrue)
