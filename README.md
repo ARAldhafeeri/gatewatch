@@ -10,7 +10,7 @@ npm install gatewatch
 ### Motivation
 There are many great libraries in npm that provide the same value. However, the motivation behind this library. Is most libraries assume a specific set of roles " user or admin", actions like "CURD". But what if your application needs to manage access and secure authorization for multiple operations ? this library may help. 
 
-As my collbrative bug bounty jounery me and colleage discovered that developers are based the point of " broken access control " with roles based on " human " interaction with the application. Which is a great point to start with. However, it is not enough. Some systems have many sub-systems that interact with each other. Therefore, the roles should be based on the system that is interacting with the application.
+As my collbrative bug bounty jounery me and colleage discovered that developers are based the point of " broken access control " with roles based on " human " interaction with the application. Which is a great point to start with. However, it is not enough. Some systems have many sub-systems that interact with each other. Therefore in this utility design nothing assumed. The developer can specify the roles, operations and resources. Which can lead to great flexibility in defining the policy. Once the policy is defined the flexiblity of the library comes in the query. The developer can query the policy using and, or. So, the flexibility starts very high then ends up very low when it comes to the query and granting access.
 
 Things this library do not assume:
 - roles
