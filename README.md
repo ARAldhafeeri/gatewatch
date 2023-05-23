@@ -1,6 +1,12 @@
 # gatewatch
 Verbose, readable and flexiable Role based access control for JavaScript based applications. It gives the freedom for the application developer to specify the operations , resources and roles. Also it allows for dynamic checks using and , or query aggregation. As will provide functionality to manage privilaged users within the application logic using grant-policy-query-or-condition. 
 
+### Installation 
+
+```Bash
+npm install gatewatch
+
+```
 ### Motivation
 There are many great libraries in npm that provide the same value. However, the motivation behind this library. Is most libraries assume a specific set of roles " user or admin", actions like "CURD". But what if your application needs to manage access and secure authorization for multiple operations ? this library may help. 
 
