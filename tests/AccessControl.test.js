@@ -72,9 +72,9 @@ describe('AccessControlUtils: test entire queries ', () => {
     })
 
 
-    test('returns true since the condition based to grantAutoIf is true ', async () => {
+    test('returns true since the condition based to or is true ', async () => {
 
-        const roleExists = new GrantQuery(enforcedPolicy).role("user").can(["create", "update", 'badAction']).on(["post"]).grantAutoIf(true).grant()
+        const roleExists = new GrantQuery(enforcedPolicy).role("user").can(["create", "update", 'badAction']).on(["post"]).or(true).grant()
 
         expect(roleExists).toBeTruthy()
        
@@ -82,9 +82,9 @@ describe('AccessControlUtils: test entire queries ', () => {
 
 
     
-    test('returns true since the condition based to grantAutoIf is false but query is granted ', async () => {
+    test('returns true since the condition based to or is false but query is granted ', async () => {
 
-        const roleExists = new GrantQuery(enforcedPolicy).role("user").can(["create", "update"]).on(["post"]).grantAutoIf(false).grant()
+        const roleExists = new GrantQuery(enforcedPolicy).role("user").can(["create", "update"]).on(["post"]).or(false).grant()
 
         expect(roleExists).toBeTruthy()
        
@@ -93,7 +93,7 @@ describe('AccessControlUtils: test entire queries ', () => {
 
     test('returns true since  admin role and resources has "*"  ', async () => {
 
-        const roleExists = new GrantQuery(enforcedPolicy).role("admin").can(["create", "update"]).on(["post"]).grantAutoIf(false).grant()
+        const roleExists = new GrantQuery(enforcedPolicy).role("admin").can(["create", "update"]).on(["post"]).or(false).grant()
 
         expect(roleExists).toBeTruthy()
        

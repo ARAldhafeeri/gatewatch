@@ -112,14 +112,14 @@ class GrantQuery{
             return grant;    
         }
     
-        grantAutoIf(grantAutoIf){
-            this.query.grantAutoIf = grantAutoIf
+        or(or){
+            this.query.or = or
             return this;
     
         }
 
-        onlyIf(onlyIf){
-            this.query.grantAutoIf = grantAutoIf
+        and(and){
+            this.query.and = and
             return this;
         }
 

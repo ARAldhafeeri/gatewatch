@@ -73,11 +73,15 @@ class AccessControlUtils {
      * @param {Array} policies     - array of predefined policies to search
      * @returns {Boolean}   - returns true or false based on policies and query
      */
+
+
     search(query, policies){
-        // handle privilaged users with grantAutoIf
+        // handle privilaged users with or
         // if the the condition checks as user is privilage, disregard the query and return true grant
-        if('grantAutoIf' in query){
-            if(query.grantAutoIf){
+
+        if('or' in query){
+            if(!this.validateBoolean(query.or)) return false;
+            if(query.or){
                 return true
             }
         }
@@ -143,10 +147,18 @@ class AccessControlUtils {
             );
 
         }
+
+        if('and' in query){
+            if(!this.validateBoolean(query.and)) return false;
+                if(query.and){
+                    grant.push(query.and)
+                }
+            }
         
 
         return grant.every(this.allGrantsTrue)
     }
+
    /**
      * @description used in arr.every
      * @param {Object} grant  - check every resources, every operation on given role
@@ -184,10 +196,15 @@ class AccessControlUtils {
         return ( (operations?.length > 0) && (operations instanceof Array));
     }
 
-    validateGrantAuto(grantAutoIf){
-        return typeof grantAutoIf === 'boolean';
+    /**
+     * @description validate and, or condition
+     * @param {Array} condition  - output of a condition true or false
+     * @returns {Boolean}   - returns true if condition is boolean, otherwise false.
+    */
+    validateBoolean(condition){
+        return typeof condition === 'boolean';
     }
-    
+
 
 
 
