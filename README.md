@@ -70,7 +70,7 @@ important note: not all the arguments are required, however, the library will re
 
 ## Usage
 
- Take this JSON policy example of rbac policy for all the upcoming examples: 
+ Take this JSON policy example of gatewatch policy for all the upcoming examples: 
 ```JSON
 {
     "resources": ["post","profile", "comment"],
@@ -140,7 +140,7 @@ const enforcedPolicy = ac.enforce();
 // mongodb service
 const user = await userService.find("_id_": req.session.userID );
 const post = await postService.find("_id": req.params.postID );
-new GrantQuery(enforcedPolicy).role(user.role).can(["delete", "create", "random"]).on("post").and(user._id === post.creator._id).grant(); // returns true if user._id === post.creator._id returns true.
+new GrantQuery(enforcedPolicy).role(user.role).can(["delete", "create", "random"]).on(["post"]).and(user._id === post.creator._id).grant(); // returns true if user._id === post.creator._id returns true.
 ```
 
 In previous example the behavior is as follow:
@@ -184,43 +184,86 @@ In previous example the behavior is as follow:
 ```JavaScript
 const express = require("express");
 const app = express();
-const AccessControl = require("rbac");
-const policy = require("./policy.json"); // same policy as above
+const {AccessControl, GrantQuery} = require("gatewatch");
+const policy = require("./data.json"); // same policy as above
 
 const ac = new AccessControl(policy);
 
 const enforcedPolicy = ac.enforce();
 
+const userService = {
+    users: [
+        {
+            _id: "123",
+            role: "user"
+        }
+    ],
+    find: async (query) => {
+        const [foundUser] = userService.users.filter(user => user._id === query._id);
+        return foundUser;
+    }
+}
+
+
 app.get("/post/:postID", async (req, res) => {
-    const user = await userService.find("_id_": req.session.userID );
-    const post = await postService.find("_id": req.params.postID );
+    const user = await userService.find({"_id": "123"} );
+
     const isSUperAdmin = user.role === "super-admin";
-    const isAuthorized = new GrantQuery(enforcedPolicy).role(user.role).can(["delete", "create", "random"]).on("post").or(isSuperAdmin).grant(); 
+    const isAuthorized = new GrantQuery(enforcedPolicy)
+        .role(user.role)
+        .can(["read"])
+        .on(["post"])
+        .or(isSUperAdmin)
+        .grant(); 
     if(isAuthorized) {
-        // do something
+        console.log("Authorized"); // Auhtorized
     } else {
-        // do something else
+        console.log("403 Forbidden");
     }
 });
+
+app.listen(3000);
 ```
 
-#### also the rbac library functionality can be implemented as middlewares in expressjs application:
+#### also the gatewatch library functionality can be implemented as middlewares in expressjs application:
 
 ```JavaScript
+const getUserRoleFromToken = async (token) => {
+    // get user id from signed jwt token
+    const user = await jwt.verify(token, 'secret');
+    const userRoleFromToken = user.role;
+    return userRoleFromToken;
+}
 
-// middleware
+// middleware 
+const authorization = (resources, actions) => {
+    return async (req, res, next) => {
 
-app.use((req, res, next) => {
-    const user = await userService.find("_id_": req.session.userID );
-    const post = await postService.find("_id": req.params.postID );
-    const isSUperAdmin = user.role === "super-admin";
-    const isAuthorized = new GrantQuery(enforcedPolicy).role(user.role).can(["delete", "create", "random"]).on("post").or(isSuperAdmin).grant(); 
-    if(isAuthorized) {
-        next();
-    } else {
-        res.status(403).send("unauthorized");
+    
+        // get user id from signed jwt token
+        const token = req.headers.authorization.split(" ")[1];
+        const userRoleFromToken = await getUserRoleFromToken(token);
+        if(!userRoleFromToken) {
+            res.status(403).send("unauthorized");
+        }
+        const isAuthorized = new GrantQuery(enforcedPolicy)
+            .role(userRoleFromToken)
+            .can(actions)
+            .on(resources)
+            .grant(); 
+
+        if(isAuthorized) {
+            next();
+        } else {
+            res.status(403).send("unauthorized");
+        }
     }
-});
+
+};
+
+// sample usage given  postRouters is exporess router in the app 
+
+postRouters.get("/", authorization(["post"], ["read"]), postFetchController);
 
 ```
 
@@ -234,7 +277,7 @@ app.use((req, res, next) => {
 
 ```JavaScript
 import React from "react";
-import { AccessControl, GrantQuery } from "rbac";
+import { AccessControl, GrantQuery } from "gatewatch";
 import policy from "./policy.json"; // same policy as above
 
 const ac = new AccessControl(policy);
@@ -245,7 +288,7 @@ const Post = () => {
     const user = await userService.find("_id_": req.session.userID );
     const post = await postService.find("_id": req.params.postID );
     const isSUperAdmin = user.role === "super-admin";
-    const isAuthorized = new GrantQuery(enforcedPolicy).role(user.role).can(["delete", "create", "random"]).on("post").or(isSuperAdmin).grant(); 
+    const isAuthorized = new GrantQuery(enforcedPolicy).role(user.role).can(["delete", "create", "random"]).on(["post"]).or(isSuperAdmin).grant(); 
     if(isAuthorized) {
         return (
             <div>
@@ -265,7 +308,7 @@ const Post = () => {
 }
 ```
 
-#### also the rbac library functionality can be implemented as custom hooks in reactjs application:
+#### also the gatewatch library functionality can be implemented as custom hooks in reactjs application:
 
 ```JavaScript
 
@@ -303,35 +346,50 @@ const Post = () => {
 ### custom hook and omit higher order component:
     
 ```JavaScript
-    const useGrant = (role, operations, resources, condition) => {
-        const isAuthorized = new GrantQuery(enforcedPolicy).role(role).can(operations).on(resources).or(condition).grant(); 
-        return isAuthorized;
-    }
+import React from "react";
+import data from "./data.json";
+import { AccessControl, GrantQuery } from "gatewatch";
 
-    const withGrant = (WrappedComponent, role, operations, resources, condition) => {
-        const isAuthorized = useGrant(role, operations, resources, condition);
-        return (props) => {
-            if(isAuthorized) {
-                return <WrappedComponent {...props} />
-            } else {
-                return <p>you are not authorized to perform this action</p>
-            }
+const ac = new AccessControl(data);
+
+const enforcedPolicy = ac.enforce();
+
+
+const useGrant = (role, operations, resources) => {
+    const isAuthorized = new GrantQuery(enforcedPolicy).role(role).can(operations).on(resources).grant(); 
+    return isAuthorized;
+}
+
+const WithGrant = (WrappedComponent, role, operations, resources) => {
+    const isAuthorized = useGrant(role, operations, resources);
+    return (props) => {
+        if(isAuthorized) {
+            return <WrappedComponent {...props} />
+        } else {
+            return <p>you are not authorized to perform this action</p>
         }
     }
+}
 
 
-    const Post = () => {
-        return (
-            <div>
-                <h1>Post</h1>
-                <p>Post content</p>
-            </div>
-        )
-    }
+const Post = () => {
+    return (
+        <div>
+            <h1>Post</h1>
+            <p>Post content</p>
+        </div>
+    )
+}
 
-    const PostWithGrant = withGrant(Post, user.role, ["delete", "create", "update"], ["post"], user._id === post.creator._id);
+// get user role from global or local state
+const user = {
+    _id: "123",
+    role: "user"
+}
 
-    export default PostWithGrant;
+const PostWithGrant = WithGrant(Post, user.role, ["delete", "create", "update"], ["post"]);
+
+export default PostWithGrant;
 ```
 
 
