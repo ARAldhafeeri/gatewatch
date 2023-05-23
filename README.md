@@ -273,7 +273,7 @@ const useGrant = (role, operations, resources, condition) => {
 // component
 
 const Post = () => {
-    const isAuthorized = useGrant(user.role, ["delete", "create", "random"], ["post"], user._id === post.creator._id);
+    const isAuthorized = useGrant(user.role, ["delete", "create", "update"], ["post"], user._id === post.creator._id);
     if(isAuthorized) {
         return (
             <div>
@@ -323,7 +323,7 @@ const Post = () => {
         )
     }
 
-    const PostWithGrant = withGrant(Post, user.role, ["delete", "create", "random"], ["post"], user._id === post.creator._id);
+    const PostWithGrant = withGrant(Post, user.role, ["delete", "create", "update"], ["post"], user._id === post.creator._id);
 
     export default PostWithGrant;
 ```

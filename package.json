@@ -1,5 +1,5 @@
 {
-  "name": "rbac",
+  "name": "AuthorizationSystem",
   "version": "1.0.0",
   "description": "Verbose, readable JSON policy based Role based access control for JavaScript based applications.",
   "main": "AccessControlError.js",
