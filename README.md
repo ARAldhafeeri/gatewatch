@@ -1,5 +1,5 @@
 # gatewatch
-Verbose, readable and flexiable Role based access control for JavaScript based applications. It gives the freedom for the application developer to specify the operations , resources and roles. Also it allows for dynamic checks using and , or query aggregation. As will provide functionality to manage privilaged users within the application logic using grant-policy-query-or-condition. 
+Verbose, readable and flexiable Role based access control for JavaScript based applications. It gives the freedom for the application developer to specify the operations , resources and roles. Also it allows for dynamic checks using and , or query logical operators. As will provide functionality to manage privilaged users within the application logic using grant-policy-query-or-condition. 
 
 ### Installation 
 
