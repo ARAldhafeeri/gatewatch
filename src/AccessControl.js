@@ -199,7 +199,6 @@ class GrantQuery{
             }
     
             // incorrect query : role, can, on must be defined
-            console.log("grant", query?.role, query?.can, query?.on)
             const allTruthy = [
     
                     this.validateRole(query?.role), 
@@ -209,7 +208,6 @@ class GrantQuery{
                     this.validateResources(query?.on)
     
                 ].every(this.allGrantsTrue);
-                console.log("grant", this.validateRole(query?.role), this.validateOperations(query?.can), this.validateResources(query?.on))
 
             if(!allTruthy){
                 return false;
