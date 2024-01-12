@@ -199,6 +199,7 @@ class GrantQuery{
             }
     
             // incorrect query : role, can, on must be defined
+            console.log("grant", query?.role, query?.can, query?.on)
             const allTruthy = [
     
                     this.validateRole(query?.role), 
@@ -208,7 +209,8 @@ class GrantQuery{
                     this.validateResources(query?.on)
     
                 ].every(this.allGrantsTrue);
-    
+                console.log("grant", this.validateRole(query?.role), this.validateOperations(query?.can), this.validateResources(query?.on))
+
             if(!allTruthy){
                 return false;
             }
@@ -293,7 +295,7 @@ class GrantQuery{
          * @returns {Boolean}   - returns true if resources is array and length of the resources is greater than 0
         */
         validateResources(resources){
-            return ( (resources?.length > 0) && (resources instanceof Array));
+            return (resources?.length > 0);
         }
     
     
@@ -303,7 +305,8 @@ class GrantQuery{
          * @returns {Boolean}   - returns true if operations is array and length of the operations is greater than 0
         */
         validateOperations(operations){
-            return ( (operations?.length > 0) && (operations instanceof Array));
+            
+            return (operations?.length > 0)
         }
     
         /**

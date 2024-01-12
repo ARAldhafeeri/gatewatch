@@ -5,6 +5,8 @@ const policyData = require("./data/data.json")
 
 const ac = new AccessControl(policyData);
 
+const vm = require('vm');
+
 const enforcedPolicy = ac.enforce()
 
 
@@ -638,6 +640,17 @@ describe('test negitive scenarios AccessControlUtils methods', () => {
             expect(err.name).toBe(expectedErrorName)
         }
        
+    })
+
+    test('inside node vm grantQuery should be true', async () => {
+     const context = {GrantQuery, enforcedPolicy, data: {}}
+        const code = `
+        const grant = new GrantQuery(enforcedPolicy).role("user").can(["create", "update"]).on(["post"]).grant()
+        data = grant
+        `
+        vm.createContext(context)
+        vm.runInContext(code, context)
+        expect(context.data).toBeTruthy()
     })
 
 })
