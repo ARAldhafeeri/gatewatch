@@ -1,8 +1,9 @@
 {
   "name": "gatewatch",
-  "version": "1.6.1",
+  "version": "1.6.2",
   "description": "Verbose, readable JSON policy based Role based access control for JavaScript based applications.",
   "main": "AccessControl.js",
+  "types": "types/gatewatch.d.ts",
   "directories": {
     "test": "tests"
   },
