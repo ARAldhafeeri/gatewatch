@@ -1,5 +1,5 @@
 {
-    "resources": ["post","profile", "comment"],
+    "resources": ["post","profile", "comment", "multi"],
     "actions": ["delete", "create", "update", "read"],
     "roles": ["user", "admin", "super-admin"],
     "policies": [
@@ -8,8 +8,13 @@
             "can": ["delete", "create", "update", "read"],
             "on": ["post", "profile","comment"]
         },
+        {
+            "role": "user",
+            "can": ["read"],
+            "on": ["multi"]
+        },
 
-            {
+        {
             "role": "admin",
             "can": ["*"], 
             "on": ["post", "profile","comment"]

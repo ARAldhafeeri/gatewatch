@@ -189,86 +189,62 @@ class GrantQuery{
             return this;
         }
 
-        search(query, policies){
-            // handle privilaged users with or
-            // if the the condition checks as user is privilage, disregard the query and return true grant
-    
-            if('or' in query){
-                if(!this.validateBoolean(query.or)) return false;
-                if(query.or) return true;
+        search(query, policies) {
+            // Check for 'or' condition and grant access if true
+            if (query.or !== undefined) {
+                if (!this.validateBoolean(query.or)) return false;
+                if (query.or) return true;
             }
     
-            // incorrect query : role, can, on must be defined
-            const allTruthy = [
+            // Validate the query structure
+            if (!this.isValidQuery(query)) return false;
     
-                    this.validateRole(query?.role), 
+            // Get policies for the given role
+            const queryRoles = policies.filter(policy => query.role === policy.role);
+            console.log("Query roles:", queryRoles);
     
-                    this.validateOperations(query?.can), 
+            // No policies found for the role, return false
+            if (queryRoles.length === 0) return false;
     
-                    this.validateResources(query?.on)
+            // Check access across all policies
+            const hasAccess = queryRoles.some(policy => this.checkAccess(query, policy));
+            
+            // Handle 'and' condition
+            if (query.and !== undefined) {
+                if (!this.validateBoolean(query.and)) return false;
+                return hasAccess && query.and;
+            }
     
-                ].every(this.allGrantsTrue);
+            return hasAccess;
+        }
 
-            if(!allTruthy){
-                return false;
-            }
-                
+        checkAccess(query, policy) {
+            const operationsGrant = this.checkOperations(query.can, policy.can);
+            const resourcesGrant = this.checkResources(query.on, policy.on);
     
-            
-            let grant= [];
-            
-            // get policy for the given role
-            const [queryRole] = policies.filter(policy => query.role === policy.role);
-    
-            // no role found return false
-            if(!queryRole) return false;
-    
-            /**
-             * check if found query role:
-             * 1. has all the query operations in the policy operations 
-             *  1.1: if operation is a string other than "*" search normally
-             *  1.2: if operation is "*" then check if found policy have "*" in can
-             * 2. has all the query resources in the policy resources
-             */
-    
-            if(queryRole.on.includes("*")){
-                // auto grant all resources since user have "*" which means all resources
-                grant.push(true)
-    
-            } else {
-    
-                query.on.forEach(resource => 
-    
-                    grant.push(queryRole.on.includes(resource))
-        
-                );
-    
-                
-            }
-    
-            if(queryRole.can.includes("*")){
-    
-                grant.push(true)
-    
-    
-            } else {
-                query.can.forEach(operation => 
-    
-                    grant.push( queryRole.can.includes(operation) )
-    
-                );
-    
-            }
-    
-            if('and' in query){
-                if(!this.validateBoolean(query.and)) return false;
-                   grant.push(query.and)
-            }
-            
-    
-            return grant.every(this.allGrantsTrue)
+            return operationsGrant && resourcesGrant;
         }
     
+        // Check if the operations requested are granted
+        checkOperations(requestedOperations, policyOperations) {
+            if (policyOperations.includes("*")) return true; // Auto grant if "*" is present
+            return requestedOperations.every(op => policyOperations.includes(op));
+        }
+    
+        // Check if the resources requested are granted
+        checkResources(requestedResources, policyResources) {
+            if (policyResources.includes("*")) return true; // Auto grant if "*" is present
+            return requestedResources.every(res => policyResources.includes(res));
+        }
+
+        isValidQuery(query) {
+            return [
+                this.validateRole(query?.role),
+                this.validateOperations(query?.can),
+                this.validateResources(query?.on)
+            ].every(this.allGrantsTrue);
+        }
+
        /**
          * @description used in arr.every
          * @param {Object} grant  - check every resources, every operation on given role
@@ -286,6 +262,7 @@ class GrantQuery{
         validateRole(roleName){
             return ( (roleName !== "") && (typeof roleName === "string"));
         }
+
     
         /**
          * @description validate on

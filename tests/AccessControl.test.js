@@ -653,4 +653,23 @@ describe('test negitive scenarios AccessControlUtils methods', () => {
         expect(context.data).toBeTruthy()
     })
 
+    // multi policies for the same role :
+    test('test user role with multi permission granted by second policy', async () => {
+        const obj = Q.search(
+            { role: "user", can: ['read'], on: ['multi']},
+            policyData.policies
+        );
+    
+        expect(obj).toBeTruthy();
+    });
+    
+    test('test user role with multi permission denied on non-matching resource', async () => {
+        const obj = Q.search(
+            { role: "user", can: ['unkown-action'], on: ['multi'] },
+            policyData.policies
+        );
+    
+        expect(obj).toBeFalsy();
+    });
+    
 })
