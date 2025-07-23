@@ -585,7 +585,6 @@ describe('test negitive scenarios AccessControlUtils methods', () => {
            ac.isJson("hello")
         } catch (err){
             const expectedErrorName = Object.keys({DATA_MUST_BE_IN_JSON_FORMAT})[0]
-            console.log(expectedErrorName, err)
 
             expect(err.name).toBe(expectedErrorName)
         }
@@ -597,7 +596,6 @@ describe('test negitive scenarios AccessControlUtils methods', () => {
            ac.validatePolicy(policy_missing_resources)
         } catch (err){
             const expectedErrorName = Object.keys({RESOURCES_MUST_BE_DEFINED})[0]
-            console.log(expectedErrorName, err)
 
             expect(err.name).toBe(expectedErrorName)
         }
@@ -610,7 +608,6 @@ describe('test negitive scenarios AccessControlUtils methods', () => {
            ac.validatePolicy(policy_missing_actions)
         } catch (err){
             const expectedErrorName = Object.keys({ACTIONS_MUST_BE_A_LIST})[0]
-            console.log(expectedErrorName, err)
 
             expect(err.name).toBe(expectedErrorName)
         }
@@ -623,7 +620,6 @@ describe('test negitive scenarios AccessControlUtils methods', () => {
            ac.validatePolicy(policy_missing_policies)
         } catch (err){
             const expectedErrorName = Object.keys({POLICIES_MUST_BE_A_LIST})[0]
-            console.log(expectedErrorName, err)
 
             expect(err.name).toBe(expectedErrorName)
         }
@@ -635,7 +631,6 @@ describe('test negitive scenarios AccessControlUtils methods', () => {
            ac.validatePolicy(policy_missing_roles)
         } catch (err){
             const expectedErrorName = Object.keys({ROLES_MUST_BE_A_LIST})[0]
-            console.log(expectedErrorName, err)
 
             expect(err.name).toBe(expectedErrorName)
         }

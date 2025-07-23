@@ -201,7 +201,6 @@ class GrantQuery{
     
             // Get policies for the given role
             const queryRoles = policies.filter(policy => query.role === policy.role);
-            console.log("Query roles:", queryRoles);
     
             // No policies found for the role, return false
             if (queryRoles.length === 0) return false;
