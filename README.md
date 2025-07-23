@@ -2,8 +2,20 @@
 
 Verbose, readable and flexiable Role based access control for JavaScript based applications. It gives the freedom for the application developer to specify the operations , resources and roles. Also it allows for dynamic checks using and , or query logical operators. As will provide functionality to manage privilaged users within the application logic using grant-policy-query-or-condition.
 
+### **Installation Note**  
+**Recommended Version:** `^1.9.2`  
+
+#### **Why?**  
+This release includes **non-trivial optimizations** for handling relatively large policy sizes using **bitmaps**, significantly improving performance.  
+
+#### **Benchmark & Details**  
+For more information, refer to the benchmark analysis here:  
+→ [GateWatch RBAC Benchmark (GitHub)](https://github.com/ARAldhafeeri/gatewatch-rbac-bench-mark)  
+
 ### Installation
 
+note : versions ^1.9.2 are highly recommended to install, it has non-trival optimization for relatively large policy sizes using bitmaps , read here : 
+https://github.com/ARAldhafeeri/gatewatch-rbac-bench-mark
 ```Bash
 npm install gatewatch
 
