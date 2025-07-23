@@ -1,5 +1,6 @@
 
-const {AccessControl, GrantQuery} = require("../src/AccessControl");
+const {AccessControl} = require("../src/core/AccessControl");
+const {GrantQuery} = require("../src/core/GrantQuery");
 
 const policyData = require("./data/data.json")
 
