@@ -1,6 +1,6 @@
 
-const {AccessControl} = require("../src/core/AccessControl");
-const {GrantQuery} = require("../src/core/GrantQuery");
+const {AccessControl} = require("../src/AccessControl");
+const {GrantQuery} = require("../src/GrantQuery");
 
 const policyData = require("./data/data.json")
 
@@ -17,7 +17,7 @@ const {
     ACTIONS_MUST_BE_A_LIST,
     POLICIES_MUST_BE_A_LIST,
     ROLES_MUST_BE_A_LIST,
-} = require("../src/core/erros");
+} = require("../src/erros");
 
 
 const policy_missing_roles = {

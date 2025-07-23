@@ -1,4 +1,7 @@
-const {AccessControl, GrantQuery} = require('./src/AccessControl');
+const {AccessControl} = require('../src/AccessControl');
+const {GrantQuery} = require('../src/GrantQuery');
 
-module.exports.AccessControl = AccessControl;
-module.exports.GrantQuery = GrantQuery;
+module.exports = {
+  AccessControl,
+  GrantQuery,
+};
